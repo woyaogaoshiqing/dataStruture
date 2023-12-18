@@ -13,6 +13,7 @@ enum STATUS_CODE
 #define DEFAULT_SIZE 10
 /*静态函数前置声明*/
 static int expandDyanmicCapacity(dynamicArray *pArray);
+static int shrinkDyanmicCapacity(dynamicArray *pArray);
 /*动态数组的初始化*/
 void dynamicArrayInit(dynamicArray *pArray, int capacity)
 {
@@ -47,11 +48,11 @@ int dynamicArrayInserData(dynamicArray *pArray,ELEMENTTYPE val)
 /*动态数组扩容*/
 static int expandDyanmicCapacity(dynamicArray *pArray)
 {
-    int ret = 0;
+    
     int needexpandCapacity = pArray->capacity + (pArray->capacity >> 1);
 
     ELEMENTTYPE * tmpPtr = pArray->data;
-    pArray->data = malloc(sizeof(ELEMENTTYPE) * needexpandCapacity);
+    pArray->data = (ELEMENTTYPE *)malloc(sizeof(ELEMENTTYPE) * needexpandCapacity);
     if (pArray->data == NULL)
     {
         return MALLOC_ERROR;
@@ -69,7 +70,7 @@ static int expandDyanmicCapacity(dynamicArray *pArray)
     }
     /*更新动态数组的容量*/
     pArray->capacity = needexpandCapacity;
-    return ret;
+    return ON_SUCCCESS;
 }
 /*动态数组插入数组，在指定位置插入*/
 int dynamicArrayAppointPosInserData(dynamicArray *pArray,ELEMENTTYPE val, int pos)
@@ -104,23 +105,146 @@ int dynamicArrayAppointPosInserData(dynamicArray *pArray,ELEMENTTYPE val, int po
 }
 
 /*动态数组修改指定位置的数据*/
-int dynamicArrayModifyAppointInserData(dynamicArray *pArray,ELEMENTTYPE val, int pos);
+int dynamicArrayModifyAppointInserData(dynamicArray *pArray,ELEMENTTYPE val, int pos)
+{
+    /*指针判空*/
+    if (pArray ==NULL)
+    {
+        return NULL;
+    }
+    /*判断位置的合法性*/
+    if (pos < 0 || pos >= pArray->len)
+    {
+        return INVALID_ACCESS;
+    }
+    
+}
+/*动态数组缩容*/
+static int shrinkDyanmicCapacity(dynamicArray *pArray)
+{
+    
+    int needshrinkCapacity = pArray->capacity - (pArray->capacity >> 1);
 
+    ELEMENTTYPE * tmpPtr = pArray->data;
+    pArray->data = (ELEMENTTYPE *)malloc(sizeof(ELEMENTTYPE) * needshrinkCapacity);
+    if (pArray->data == NULL)
+    {
+        return MALLOC_ERROR;
+    }
+    /*把之前的数据全部拷贝过来*/
+    for (int idx = 0; idx < pArray->len; idx++)
+    {
+        pArray->data[idx] = tmpPtr[idx];
+    }
+    /*释放以前的内容，避免内存泄漏*/
+    if(tmpPtr != NULL)
+    {
+        free(tmpPtr);
+        tmpPtr = NULL;
+    }
+    /*更新容量*/
+    pArray->capacity = shrinkDyanmicCapacity;
+    return ON_SUCCCESS; 
+}
 /*动态数组删除数据（默认情况下删除最后末尾的数据）*/
-int dynamicArrayDeletData(dynamicArray *pArray);
+int dynamicArrayDeletData(dynamicArray *pArray)
+{
+    dynamicArrayDeleAppointPosData(pArray, pArray->len -1);
+
+}
 
 /*动态数组删除指定位置数据*/
-int dynamicArrayDeleAppointPosData(dynamicArray *pArray, int pos);
+int dynamicArrayDeleAppointPosData(dynamicArray *pArray, int pos)
+{
+    if (pArray == NULL)
+    {
+        return NULL_PTR;
+    }
+    if (pos < 0 || pos >= pArray->len)
+    {
+        return INVALID_ACCESS;
+    }
+    /*缩容*/
+    if (pArray->len  < pArray->capacity >> 1)
+    {
+        shrinkDynamicCapacity();
+    }
+    
+    /*数据前移*/
+    for (int idx = pos; idx < pArray->len; idx++)
+    {
+        pArray->data[idx] = pArray->data[idx = 1];
+    }
+    /*更新数据大小*/
+    (pArray->len)--;
+    return ON_SUCCCESS;
+    
+}
 
 /*动态数组销毁*/
-int dynamicArrayDestroy(dynamicArray *pArray);
-
+int dynamicArrayDestroy(dynamicArray *pArray)
+{
+    if(pArray == NULL)
+    {
+        return NULL_PTR;
+    }
+    if(pArray->data != NULL)
+    {
+        free(pArray->data);
+        pArray->data = NULL;
+    }
+    return ON_SUCCCESS;
+}
 /*动态数组删除指定的元素*/
-int dynamicArrayDeleteAppointData(dynamicArray *pArray, ELEMENTTYPE val);
+int dynamicArrayDeleteAppointData(dynamicArray *pArray, ELEMENTTYPE val)
+{
+#if 0
+    for (int idx = 0; idx < pArray->len; idx++)
+    {
+        if (val == pArray->data[idx])
+        {
+            dynamicArrayDeleteAppointData(pArray, idx);
+            /*从头开始*/
 
+        }
+        
+    }
+#endif
+    for (int idx = pArray->len; idx >= 0 ; idx--)
+    {
+        if (val = pArray->data[idx])
+        {
+            dynamicArrayDeleAppointPosData(pArray, idx);
+        }
+        
+    }
+    
+    return ON_SUCCCESS; 
+}
 
 /*获取大小*/
-int dynamicArrayGetSize(dynamicArray *pArray, int * pSize);
-
+int dynamicArrayGetSize(dynamicArray *pArray, int * pSize)
+{
+    if(pArray == NULL || pSize == NULL)
+    {
+        return NULL_PTR;
+    }
+    if (pSize != NULL)
+    {
+        *pSize = pArray->len;
+    }
+    return ON_SUCCCESS;
+}
 /*获取容量*/
-int dynamicArrayGetCapacity(dynamicArray *pArray, int *pCapacity);
+int dynamicArrayGetCapacity(dynamicArray *pArray, int *pCapacity)
+{
+    if(pArray == NULL || pCapacity == NULL)
+    {
+        return NULL_PTR;
+    }
+    if (pCapacity != NULL)
+    {
+        *pCapacity = pArray->capacity;
+    }
+    return ON_SUCCCESS;
+}

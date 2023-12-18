@@ -13,31 +13,36 @@ typedef struct dynamicArray
 
 /*API application program interface*/
 /*动态数组的初始化*/
-void dynamicArrayInit();
+void dynamicArrayInit(dynamicArray *pArray);
 
 /*动态数组插入数据(默认查到数组的末尾)*/
-int dynamicArrayInserData();
+int dynamicArrayInserData(dynamicArray *pArray,ELEMENTTYPE val);
 
 /*动态数组插入数组，在指定位置插入*/
-int dynamicArrayAppointInserData();
+int dynamicArrayAppointPosInserData(dynamicArray *pArray,ELEMENTTYPE val, int pos);
 
 /*动态数组修改指定位置的数据*/
-int dynamicArrayModifyAppointInserData();
+int dynamicArrayModifyAppointInserData(dynamicArray *pArray,ELEMENTTYPE val, int pos);
 
 /*动态数组删除数据（默认情况下删除最后末尾的数据）*/
-int dynamicArrayDeletData();
+int dynamicArrayDeletData(dynamicArray *pArray);
 
 /*动态数组删除指定位置数据*/
-int dynamicArrayDeleAppointPosData();
+int dynamicArrayDeleAppointPosData(dynamicArray *pArray, int pos);
 
 /*动态数组销毁*/
-int dynamicArrayDestroy();
+int dynamicArrayDestroy(dynamicArray *pArray);
+
+/*动态数组删除指定的元素*/
+int dynamicArrayDeleteAppointData(dynamicArray *pArray, ELEMENTTYPE val);
+
 
 /*获取大小*/
-int dynamicArrayGetSize();
+int dynamicArrayGetSize(dynamicArray *pArray, int * pSize);
 
 /*获取容量*/
-int dynamicArrayGetCapacity();
+int dynamicArrayGetCapacity(dynamicArray *pArray, int *pCapacity);
+
 
 
 

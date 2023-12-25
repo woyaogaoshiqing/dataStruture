@@ -42,7 +42,19 @@ int BinarySearchTreeInit(BinarySearchTree **pBstree)
     }
     return ret;
 }
+static int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2)
+{
+#if 0
+    if (val1 < val2)
+    {
+        return -1;
+    }
+    else if()
+    {
 
+    }
+#endif
+}
 /*二叉搜索树的插入*/
 int BinarySearchTreeInser(BinarySearchTree *pBstree, ELEMENTTYPE val)
 {
@@ -77,14 +89,28 @@ int BinarySearchTreeInser(BinarySearchTree *pBstree, ELEMENTTYPE val)
             return ret;
         }
     }
+    /**/
+    BSTreeNode * newBstNode = malloc(sizeof(BSTreeNode) * 1);
+    if (newBstNode == NULL)
+    {
+        return MALLOC_ERROR;
+    }
+    memset(newBstNode, 0, sizeof(BSTreeNode) * 1);
+    {
+        newBstNode->data = 0;
+        newBstNode->left = NULL;
+        newBstNode->right = NULL;
+        newBstNode->parent = NULL; 
+    }
+    newBstNode->data = val;
     if (cmp < 0)
     {
-        parentNode->left = ;
+        parentNode->left = newBstNode;
     }
     else
     {
-        parentNode->right = ;
+        parentNode->right = newBstNode;
     }
-
+    (pBstree->size)++;
     return ret;
 }
